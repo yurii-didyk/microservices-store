@@ -2,9 +2,11 @@ using AutoMapper;
 using Catalog.API.Context;
 using Catalog.API.Context.Interfaces;
 using Catalog.API.Context.Settings;
+using Catalog.API.Handlers;
 using Catalog.API.Mapping;
 using Catalog.API.Repositories;
 using Catalog.API.Repositories.Interfaces;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +19,7 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Catalog.API
@@ -45,6 +48,7 @@ namespace Catalog.API
             services.AddSingleton(sp =>
                 sp.GetRequiredService<IOptions<CatalogContextSettings>>().Value);
 
+            services.AddMediatR(Assembly.GetExecutingAssembly());
             services.AddScoped<ICatalogContext, CatalogContext>();
             services.AddScoped<IProductRepository, ProductRepository>();
 
