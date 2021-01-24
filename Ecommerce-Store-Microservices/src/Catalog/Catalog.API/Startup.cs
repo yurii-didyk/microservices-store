@@ -1,3 +1,10 @@
+using AutoMapper;
+using Catalog.API.Context;
+using Catalog.API.Context.Interfaces;
+using Catalog.API.Context.Settings;
+using Catalog.API.Mapping;
+using Catalog.API.Repositories;
+using Catalog.API.Repositories.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -5,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
@@ -30,6 +38,19 @@ namespace Catalog.API
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Catalog.API", Version = "v1" });
+            });
+
+            services.Configure<CatalogContextSettings>(Configuration.GetSection(nameof(CatalogContextSettings)));
+
+            services.AddSingleton(sp =>
+                sp.GetRequiredService<IOptions<CatalogContextSettings>>().Value);
+
+            services.AddScoped<ICatalogContext, CatalogContext>();
+            services.AddScoped<IProductRepository, ProductRepository>();
+
+            services.AddAutoMapper(cfg =>
+            {
+                cfg.AddProfile<ProductProfile>();
             });
         }
 
