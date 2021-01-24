@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Catalog.API.Commands;
 using Catalog.API.Models;
 using Catalog.API.Responses;
 using System;
@@ -13,6 +14,8 @@ namespace Catalog.API.Mapping
         public ProductProfile()
         {
             CreateMap<Product, ProductResponse>();
+            CreateMap<CreateProductCommand, Product>();
+            CreateMap<UpdateProductCommand, Product>();
         }
     }
 }

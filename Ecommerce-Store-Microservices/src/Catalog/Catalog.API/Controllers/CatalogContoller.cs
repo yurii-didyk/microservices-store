@@ -1,4 +1,5 @@
-﻿using Catalog.API.Queries;
+﻿using Catalog.API.Commands;
+using Catalog.API.Queries;
 using Catalog.API.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -53,6 +54,29 @@ namespace Catalog.API.Controllers
             var query = new GetProductByNameQuery(name);
             var orders = await _mediator.Send(query);
             return Ok(orders);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateProduct([FromBody] CreateProductCommand command)
+        {
+            var result = await _mediator.Send(command);
+            return Created(Request.Path, result);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateProduct([FromBody] UpdateProductCommand command)
+        {
+            var result = await _mediator.Send(command);
+            return Ok(result);
+        }
+
+        [HttpDelete]
+        [Route("{id:length(24)}")]
+        public async Task<IActionResult> DeleteProduct([FromBody] string id)
+        {
+            var command = new DeleteProductCommand(id);
+            var result = await _mediator.Send(command);
+            return Ok(result);
         }
     }
 }

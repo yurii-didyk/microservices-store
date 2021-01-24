@@ -18,10 +18,10 @@ namespace Catalog.API.Repositories
             _context = catalogContext ?? throw new ArgumentNullException(nameof(catalogContext));
         }
 
-        public async Task<IEnumerable<Product>> GetProducts() => 
+        public async Task<IEnumerable<Product>> GetProducts() =>
             await _context.Products.Find(p => true).ToListAsync();
 
-        public async Task<Product> GetProduct(string id) => 
+        public async Task<Product> GetProduct(string id) =>
             await _context.Products.Find(p => p.Id == id).FirstOrDefaultAsync();
 
         public async Task<IEnumerable<Product>> GetProductByName(string name)
@@ -38,7 +38,12 @@ namespace Catalog.API.Repositories
             return await _context.Products.Find(filter).ToListAsync();
         }
 
-        public Task Create(Product product) => _context.Products.InsertOneAsync(product);
+        public async Task<string> Create(Product product)
+        {
+            await _context.Products.InsertOneAsync(product);
+
+            return product.Id;
+        }
 
         public async Task<bool> Update(Product product)
         {
